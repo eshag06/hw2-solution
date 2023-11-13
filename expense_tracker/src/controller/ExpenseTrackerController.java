@@ -72,4 +72,14 @@ public class ExpenseTrackerController {
       view.toFront();}
 
   }
+
+  public List<Transaction> getSelectedTransactions() {
+    // Check if a filter is applied
+    if (filter != null) {
+        List<Transaction> transactions = model.getTransactions();
+        return filter.filter(transactions);
+    } else {
+        return model.getTransactions(); // Return all transactions if no filter is applied
+    }
+}
 }

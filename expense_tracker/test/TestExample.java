@@ -8,6 +8,7 @@ import model.Filter.AmountFilter;
 import model.Filter.CategoryFilter;
 
 import java.util.Date;
+import java.time.Instant;
 import java.util.List;
 import java.text.ParseException;
 import java.time.LocalDateTime;
@@ -128,9 +129,11 @@ public class TestExample {
         double totalCost = getTotalCost();
         assertEquals(0.00, totalCost, 0.01);
     }
+
     @Test
     public void testAddTransactionWithValidAmountAndCategory() {
         // New Test Case 1: Add Transaction
+        assertEquals(0, model.getTransactions().size());
         double amount = 50.0;
         String category = "food";
 
@@ -142,11 +145,12 @@ public class TestExample {
 
         // Check the total amount
         assertEquals(amount, getTotalCost(), 0.01);
+        Transaction t = model.getTransactions().get(0);
+        checkTransaction(amount, category, t);
 
-        // Check if view is getting updated
-        JTable transactionsTable = view.getTransactionsTable();
+        JTable vList = view.getTransactionsTable();
 
-        // Get current system time
+        // Checking if the view is being updated with the transaction
         LocalDateTime currentDateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
         String formattedDateTime = currentDateTime.format(formatter);
@@ -158,18 +162,22 @@ public class TestExample {
         };
 
         // Assert values in the transactions table
-        for (int row = 0; row < transactionsTable.getRowCount(); row++) {
-            for (int col = 0; col < transactionsTable.getColumnCount(); col++) {
-                assertEquals(expectedData[row][col], transactionsTable.getValueAt(row, col));
+        for (int row = 0; row < vList.getRowCount(); row++) {
+            for (int col = 0; col < vList.getColumnCount(); col++) {
+                assertEquals(expectedData[row][col], vList.getValueAt(row, col));
             }
         }
+
+
+        
+
     }
 
     @Test
     public void testInvalidInputHandling() {
         // New Test Case 2: Invalid Input Handling
         // Attempt to add a transaction with an invalid amount or category
-  
+        assertEquals(0, model.getTransactions().size());
         double Amount = 10.0;
         String invalidCategory = "Fees";
         // Perform the action: Attempt to add a transaction with invalid input
@@ -196,11 +204,11 @@ public class TestExample {
     private int findRowIndexInModel(Transaction transaction, DefaultTableModel model) {
         for (int i = 0; i < model.getRowCount(); i++) {
             // Assuming that the amount is in the second column (index 1)
-            Double amount = (Double) model.getValueAt(i+1, 1);
+            Double amount = (Double) model.getValueAt(i, 1);
 
             // Adjust this condition based on your equality criteria
             if (amount.equals(transaction.getAmount())) {
-                return i+1;
+                return i;
             }
         }
 
@@ -213,6 +221,7 @@ public class TestExample {
         // Expected Output: Only transactions matching the amount are returned (and will be highlighted)
         
         // Add multiple transactions with different amounts
+        assertEquals(0, model.getTransactions().size());
         controller.addTransaction(30.0, "food");
         controller.addTransaction(40.0, "travel");
         controller.addTransaction(50.0, "food");
@@ -244,11 +253,11 @@ public class TestExample {
     private int findRowIndexInModelByCategory(Transaction transaction, DefaultTableModel model) {
         for (int i = 0; i < model.getRowCount(); i++) {
             // Assuming that the category is in the third column (index 2)
-            String category = (String) model.getValueAt(i+1, 2);
+            String category = (String) model.getValueAt(i, 2);
 
             // Adjust this condition based on your equality criteria
             if (category.equals(transaction.getCategory())) {
-                return i+1;
+                return i;
             }
         }
 
@@ -262,6 +271,7 @@ public class TestExample {
         // Expected Output: Only transactions matching the category are returned (and will be highlighted)
         
         // Add multiple transactions with different categories
+        assertEquals(0, model.getTransactions().size());
         controller.addTransaction(50.0, "food");
         controller.addTransaction(60.0, "travel");
         controller.addTransaction(100.0, "entertainment");

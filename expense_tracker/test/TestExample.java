@@ -301,5 +301,91 @@ public class TestExample {
             assertEquals(expectedColor, actualColor);
         }
     }
+
+    @Test
+    public void testUndoDisallowed(){
+        // Initial Case: Transaction list should be empty
+        assertEquals(model.getTransactions().size(), 0);
+
+        //Intially Transaction Table button should be disabled
+        assertFalse(view.getUndoButton().isEnabled());
+
+        // Add multiple transactions with different categories
+        controller.addTransaction(50.0, "food");
+        controller.addTransaction(60.0, "travel");
+
+        // Transaction Table button should remain disabled as nothing was selected
+        assertFalse(view.getUndoButton().isEnabled());
+
+    }
+
+    @Test
+    public void testUndoAllowed(){
+        // Initial Case: Transaction list should be empty
+        assertEquals(model.getTransactions().size(), 0);
+
+        // Add multiple transactions with different categories
+        controller.addTransaction(50.0, "food");
+        controller.addTransaction(60.0, "travel");
+
+        // All transaction list from the view before Undo
+        JTable transactionListBeforeUndo = view.getTransactionsTable();
+
+        // Expected transaction values
+        Object[][] expectedData = {
+                {1, 50.0 , "food", null },
+                {2, 60.0 , "travel", null },
+                {"Total", null , null, 110.0 }
+        };
+
+
+        // Testing the expected values with actual values before undo operation
+        int rowCount = transactionListBeforeUndo.getRowCount();
+        int colCount = transactionListBeforeUndo.getColumnCount();
+
+        for (int i = 0; i < rowCount; i++) {
+            for (int j = 0; j < colCount; j++) {
+
+                if(i!=rowCount-1 && j==colCount-1){ //Ignoring Datetime values
+                    continue;
+                }
+
+                assertEquals(expectedData[i][j], transactionListBeforeUndo.getValueAt(i, j));
+            }
+        }
+
+        // First row is selected for Undo
+        int [] rowSelected = {0};
+        model.setRowsSelected(rowSelected);
+        controller.refreshUndoButton();
+
+        // As transaction was selected so Button should be enabled now
+        assertTrue(view.getUndoButton().isEnabled());
+
+        // Apply undo for first selected row
+        controller.applyUndo(rowSelected);
+
+        // All transaction list from the view after Undo
+        JTable transactionListAfterUndo = view.getTransactionsTable();
+        rowCount = transactionListAfterUndo.getRowCount();
+        colCount = transactionListAfterUndo.getColumnCount();
+
+        // Expected values for assertions
+        Object[][] expectedDataAfterUndo = {
+                {1, 60.0 , "travel", null },
+                {"Total", null , null, 60.0 }
+        };
+
+        for (int i = 0; i < rowCount; i++) {
+            for (int j = 0; j < colCount; j++) {
+                if(i!=rowCount-1 && j==colCount-1){ //Ignoring Datetime values
+                    continue;
+                }
+                assertEquals(expectedDataAfterUndo[i][j], transactionListAfterUndo.getValueAt(i, j));
+            }
+        }
+
+
+    }
     
 }

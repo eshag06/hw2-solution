@@ -83,6 +83,7 @@ public class ExpenseTrackerController {
     }
   }
 
+  // Added below functions for undo functionality
   public void applyUndo(int[] rows){
     List<Transaction> transactions = model.getTransactions();
 

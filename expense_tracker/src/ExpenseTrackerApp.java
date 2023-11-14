@@ -69,6 +69,7 @@ public class ExpenseTrackerApp {
     }});
 
     // Undo button is attached with action listener.
+    // Added below functiosn for undo functionality
     view.applyUndoButtonListener(e -> {
         try{
             int[] selectedRowsFromModel = model.getRowsSelected();

@@ -216,6 +216,7 @@ public class ExpenseTrackerView extends JFrame {
     return transactionsTable.getSelectedRows();
   }
 
+  // Added below functions for undo functionality
   public void addListenerToTable(ListSelectionListener listener){
       ListSelectionModel selectionModel = transactionsTable.getSelectionModel();
       selectionModel.addListSelectionListener(listener);

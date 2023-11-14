@@ -35,3 +35,20 @@
   - **Tested Components: Controller, View**
   - Adds multiple transactions with different categories and applies a category filter through the controller.
   - Verifies that only transactions matching the specified category are returned and highlighted in the view.
+
+### 5. Undo Disallowed
+
+- **Method:** `testUndoDisallowed()`
+- **Description:**
+  - **Tested Components: Model, View, Controller**
+  - Using model it checks the undo button which should be disabled when transaction list is empty.
+  - Using view it checks that no transaction is selected when undo button is disabled.
+
+### 6. Undo Allowed
+
+- **Method:** `testUndoAllowed()`
+- **Description:**
+  - **Tested Components: Model, View, Controller**
+  - Checks first through view if transaction list is empty and then multiple transactions are added through controller.
+  - A transaction is selected to be deleted and which is deleted through controller via undo functionality. 
+  - Gets update transaction list and it was verified confirming the undo function were performed.

@@ -49,9 +49,9 @@ public class ExpenseTrackerApp {
           controller.applyFilter();
       }
      }catch(IllegalArgumentException exception) {
-    JOptionPane.showMessageDialog(view, exception.getMessage());
-    view.toFront();
-   }});
+     JOptionPane.showMessageDialog(view, exception.getMessage());
+     view.toFront();
+    }});
 
 
     // Add action listener to the "Apply Amount Filter" button
@@ -63,11 +63,30 @@ public class ExpenseTrackerApp {
           controller.setFilter(amountFilter);
           controller.applyFilter();
       }
-    }catch(IllegalArgumentException exception) {
-    JOptionPane.showMessageDialog(view,exception.getMessage());
-    view.toFront();
-   }});
-    
+      }catch(IllegalArgumentException exception) {
+      JOptionPane.showMessageDialog(view,exception.getMessage());
+      view.toFront();
+    }});
+
+    // Undo button is attached with action listener.
+    view.applyUndoButtonListener(e -> {
+        try{
+            int[] selectedRowsFromModel = model.getRowsSelected();
+            if (selectedRowsFromModel.length > 0){
+                controller.applyUndo(selectedRowsFromModel);
+            }
+
+        }
+        catch (IllegalArgumentException exception){
+            JOptionPane.showMessageDialog( view, exception.getMessage() );
+            view.toFront();
+        }
+    });
+
+    view.addListenerToTable(e -> {
+      model.setRowsSelected(view.getRowsSelected());
+      controller.refreshUndoButton();
+    });
 
   }
 }

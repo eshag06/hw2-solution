@@ -3,6 +3,7 @@ package view;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.event.ListSelectionListener;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -26,6 +27,7 @@ public class ExpenseTrackerView extends JFrame {
 
   private JTextField amountFilterField;
   private JButton amountFilterBtn;
+  private JButton undoButton;
 
   
 
@@ -61,6 +63,7 @@ public class ExpenseTrackerView extends JFrame {
     JLabel amountFilterLabel = new JLabel("Filter by Amount:");
     amountFilterField = new JTextField(10);
     amountFilterBtn = new JButton("Filter by Amount");
+    undoButton = new JButton("Undo");
   
 
   
@@ -75,6 +78,8 @@ public class ExpenseTrackerView extends JFrame {
     JPanel buttonPanel = new JPanel();
     buttonPanel.add(amountFilterBtn);
     buttonPanel.add(categoryFilterBtn);
+    buttonPanel.add(undoButton);
+    undoButton.setEnabled(false);
   
     // Add panels to frame
     add(inputPanel, BorderLayout.NORTH);
@@ -131,6 +136,10 @@ public class ExpenseTrackerView extends JFrame {
 
   public void addApplyAmountFilterListener(ActionListener listener) {
     amountFilterBtn.addActionListener(listener);
+  }
+
+  public void applyUndoButtonListener(ActionListener listener) {
+    undoButton.addActionListener(listener);
   }
 
   public double getAmountFilterInput() {
@@ -194,5 +203,35 @@ public class ExpenseTrackerView extends JFrame {
       transactionsTable.repaint();
   }
 
+  public int[] getRowsSelected() {
+    int[] selected = transactionsTable.getSelectedRows();
+
+    if (selected.length > 0) {
+        int lastSelected = selected[selected.length - 1]; // Unselect the last selected row
+        int lastTableRow = transactionsTable.getRowCount() - 1;
+        if (lastSelected == lastTableRow) {
+            transactionsTable.removeRowSelectionInterval(lastSelected, lastSelected);
+        }
+    }
+    return transactionsTable.getSelectedRows();
+  }
+
+  public void addListenerToTable(ListSelectionListener listener){
+      ListSelectionModel selectionModel = transactionsTable.getSelectionModel();
+      selectionModel.addListSelectionListener(listener);
+  }
+
+  public void enableUndoButton(){
+    undoButton.setEnabled(true);
+  }
+
+  public void disableUndoButton(){
+    undoButton.setEnabled(false);
+
+  }
+
+  public JButton getUndoButton(){
+      return undoButton;
+  }
 
 }

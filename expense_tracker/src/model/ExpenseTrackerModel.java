@@ -7,6 +7,7 @@ import java.util.List;
 public class ExpenseTrackerModel {
 
   //encapsulation - data integrity
+  private int[] rowsSelected;
   private List<Transaction> transactions;
 
   public ExpenseTrackerModel() {
@@ -28,6 +29,14 @@ public class ExpenseTrackerModel {
   public List<Transaction> getTransactions() {
     //encapsulation - data integrity
     return Collections.unmodifiableList(new ArrayList<>(transactions));
+  }
+
+  public  int[] getRowsSelected(){ //Get the rows which were selected 
+    return rowsSelected;
+  }
+
+  public void setRowsSelected(int[] rows){ //Assign rows to sected rows
+    this.rowsSelected = rows;
   }
 
 }

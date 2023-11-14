@@ -5,7 +5,7 @@ import view.ExpenseTrackerView;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 import model.ExpenseTrackerModel;
 import model.Transaction;
@@ -81,5 +81,30 @@ public class ExpenseTrackerController {
     } else {
         return model.getTransactions(); // Return all transactions if no filter is applied
     }
-}
+  }
+
+  public void applyUndo(int[] rows){
+    List<Transaction> transactions = model.getTransactions();
+
+    for(int row : rows){
+      model.removeTransaction(transactions.get(row));
+    }
+    refresh();
+
+    if(filter != null){
+      applyFilter(); //When filter is not null, we apply filter on the rows removed.
+    }
+
+  }
+
+  public void refreshUndoButton(){
+    int[] getRowsFromModel =  model.getRowsSelected();
+    if(getRowsFromModel.length > 0){
+      view.enableUndoButton();
+    }
+    else{
+      view.disableUndoButton();
+    }
+  }
+  
 }
